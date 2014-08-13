@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data>
+    	<!--Principal-->
+  	  	<menuitem id="menu_autorepair"
+            name="Auto Repair"
+            sequence="10"/>    
+         <!--Tree-->           
+        <menuitem id="menu_autorepair_items"
+            name="Auto Repair"
+            sequence="10"
+            parent="menu_autorepair" />
+        <!--Submenu Tree Repairs-->    
+        <menuitem id="menu_autorepair_repairs"
+            name="Repairs Vehicles"
+            sequence="100"
+            parent="menu_autorepair_items" />
+        <!--Submenu Tree Configuration-->   
+        <menuitem id="menu_autorepair_configuration"
+            name="Configuration"
+            sequence="100"
+            parent="menu_autorepair_items" />    
+        <!--Submenu Items Repairs-->   
+        <menuitem id="menu_autorepair_repairs_item"
+            name="Repairs"
+            sequence="10"
+            parent="menu_autorepair_repairs"/>
+         <!--Submenu Items Configuration-->  
+        <menuitem id="menu_autorepair_parts"
+            name="Parts"
+            sequence="10"
+            parent="menu_autorepair_configuration"/>
+        <menuitem id="menu_autorepair_clients"
+            name="Clients"
+            sequence="10"
+            parent="menu_autorepair_configuration"/>
+        <menuitem id="menu_autorepair_vehicles"
+            name="vehicles"
+            sequence="10"
+            parent="menu_autorepair_configuration"/>
+
+    </data>
+</openerp>
