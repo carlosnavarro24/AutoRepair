@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>	
+	<data>
+		<!--Tree View Part-->
+		<record model="ir.ui.view" id="view_autorepair_part_tree">
+            <field name="name">view.autorepair.part.tree</field>
+            <field name="model">autorepair.part</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <tree string="Parts"  colors="red:stock==0;blue:stock!=0">
+                	<field name="reference" />
+                    <field name="description" />
+                    <field name="price" />
+    	     		<field name="stock" />
+                </tree>    
+            </field>
+        </record>
+        <!--Form View Part-->
+        <record model="ir.ui.view" id="view_autorepair_part_form">
+            <field name="name">view.autorepair.part.form</field>
+            <field name="model">autorepair.part</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Part" version="7.0">
+                        <sheet>
+                        	 <div class="oe_title">
+                            	<label for="reference" class="oe_edit_only"/>
+                            	<h1>
+                                	<field name="reference" placeholder="Sample: Chas2324" />                           	
+                            	</h1>
+                        	</div>
+                        	<separator></separator>
+                      		<div>
+                      			<label for="description" class="oe_edit_only"/>
+                      			<field name="description"/>
+                      		</div>
+                      		<group col="2">
+                       				<field name="price" widget='monetary'/>
+               						<field name="stock"/>
+                   			</group>
+					</sheet>
+                </form>
+            </field>
+        </record>
+         <!--Search View Part-->
+         <record model="ir.ui.view" id="view_auterepair_part_search">
+            <field name="name">view.autorepair.part.search</field>
+            <field name="model">autorepair.part</field>
+            <field name="arch" type="xml">
+            	<search string="Part Search">	
+            		<filter icon="terp-camera_test" domain="[('stock','&gt;',0)]" string="In stock" help="In Stock"/>
+             		<filter icon="terp-camera_test" domain="[('stock','&lt;',1)]" string="Not stock" help="Not Stock"/>
+					<separator/>
+					<filter icon="terp-camera_test" domain="[('price','&lt;=',0)]" string="Not price" help="Not price"/>				
+	                <group expand="0" string="Group By...">
+	   					<filter string="Price" name="price" icon="terp-project" domain="[]" context="{'group_by':'price'}"/>
+	   					<filter string="Stock" name="stock" icon="terp-project" domain="[]" context="{'group_by':'stock'}"/>
+					</group>
+				</search>
+            </field>
+        </record>
+        <!--Form View inherit res.partner-->
+        <record id="view_autorepair_partner" model="ir.ui.view">
+            <field name="name">view.autorepair.partner</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Vehicles">
+                        <field name="vehicle_ids"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+        
+        <!--Search View Vehicle-->
+         <record model="ir.ui.view" id="view_vehicle_part_search">
+            <field name="name">view.autorepair.vehicle.search</field>
+            <field name="model">autorepair.vehicle</field>
+            <field name="arch" type="xml">
+            	<search string="Part Search">	
+	                <group expand="0" string="Group By...">
+	   					<filter string="Client" name="client" icon="terp-project" domain="[]" context="{'group_by':'client_id'}"/>
+					</group>
+				</search>
+            </field>
+        </record>
+        
+        <!--Tree View vehicle-->
+		<record model="ir.ui.view" id="view_autorepair_vehicle_tree">
+            <field name="name">view.autorepair.vehicle.tree</field>
+            <field name="model">autorepair.vehicle</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <tree string="Vehicles">
+                	<field name="register" />
+                    <field name="brand" />
+                    <field name="model" />
+    	     		<field name="color" />
+    	     		<field name="repair_ids" />
+                </tree>    
+            </field>
+        </record>
+		<!--Form View Vehicle-->
+        <record model="ir.ui.view" id="view_autorepair_vehicle_form">
+            <field name="name">view.autorepair.vehicle.form</field>
+            <field name="model">autorepair.vehicle</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Vehicle" version="7.0">
+                        <sheet>
+                        	 <div class="oe_title">
+                            	<label for="register" class="oe_edit_only"/>
+                            	<h1>
+                                	<field name="register" placeholder="Sample: CR20894" />                           	
+                            	</h1>
+                        	</div>
+                        	<separator></separator>
+                      		<group col="4">
+                       				<field name="brand"/>
+               						<field name="model"/>
+               						<field name="color"/>
+               						<field name="client_id"/>
+                   			</group>
+
+                   			<notebook colspan="4">
+                   				<page string="Repairs">
+                   					<field name="repair_ids"/>
+                   				</page>
+                   			</notebook>
+					</sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!--Tree View repair-->
+		<record model="ir.ui.view" id="view_autorepair_repair_tree">
+            <field name="name">view.autorepair.repair.tree</field>
+            <field name="model">autorepair.repair</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <tree string="Repairs">
+                	<field name="repair_num" />
+                    <field name="client_id" />
+                    <field name="vehicle_id" />
+    	     		<field name="in_date" />
+    	     		<field name="out_date" />
+                </tree>    
+            </field>
+        </record>
+        
+        <!--Sequence Repair-->
+		<record model="ir.sequence.type" id="seq_type_autorepair_repair">
+        	<field name="name">Repair Number</field>
+        	<field name="code">autorepair.repair</field>
+    	</record>
+    	<record model="ir.sequence" id="seq_autorepair_repair">
+        	<field name="name">Repair Number</field>
+        	<field name="code">autorepair.repair</field>
+        	<field name="prefix">Rep</field>
+        	<field name="padding">6</field>
+        	<field name="next_number">1</field>
+        <!-- in case you need to attach it to a specific company <field name="company_id" ref="xx"/> -->
+		</record>
+        
+        		<!--Form View repair-->
+        <record model="ir.ui.view" id="view_autorepair_repair_form">
+            <field name="name">view.autorepair.repair.form</field>
+            <field name="model">autorepair.repair</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Repair" version="7.0">
+                        <sheet>
+                        	 <div class="oe_title">
+                            	<label for="repair_num" class="oe_edit_only"/>
+                            	<h1>
+                                	<field name="repair_num" placeholder="Automatic Generated" />                           	
+                            	</h1>
+                        	</div>
+                        	<separator></separator>
+                      		<div>
+                      			<label for="description" class="oe_edit_only"/>
+                      			<field name="description"/>
+                      		</div>
+                        	<separator></separator>
+                      		<group col="4">
+                       				<field name="vehicle_id" on_change="onchange_get_client(vehicle_id)"/>
+               						<field name="client_id"/>
+               				</group>
+               				<group col="4">
+                       				<field name="in_date"/>
+               						<field name="out_date"/>
+               						<field name="hours"/>
+               				</group>
+
+                   			<notebook colspan="4">
+                   				<page string="Detail Repairs">
+                   					<field name="detail_repair_ids"/>
+                   				</page>
+                   			</notebook>
+					</sheet>
+                </form>
+            </field>
+        </record>
+         <!--Search View Repair-->
+         <record model="ir.ui.view" id="view_auterepair_repair_search">
+            <field name="name">view.autorepair.repair.search</field>
+            <field name="model">autorepair.repair</field>
+            <field name="arch" type="xml">
+            	<search string="Repair Search">	
+					<group expand="0" string="Group By...">
+	   					<filter string="Vehicle" name="vehicle" icon="terp-project" domain="[]" context="{'group_by':'vehicle_id'}"/>
+	   					<filter string="Client" name="client" icon="terp-project" domain="[]" context="{'group_by':'client_id'}"/>
+						<filter string="Check In " name="checkin_date" icon="terp-project" domain="[]" context="{'group_by':'in_date'}"/>
+						<filter string="Check Out " name="checkout_date" icon="terp-project" domain="[]" context="{'group_by':'out_date'}"/>
+					
+					</group>
+				</search>
+            </field>
+        </record>
+                <!--Action Repair-->
+		<record model="ir.actions.act_window" id="action_repair">
+			<field name="name">Repair</field>
+			<field name="res_model">autorepair.repair</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{'search_default_client': 1,'search_default_vehicle': 1}</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Creating repairs of vehicles</p>
+           	</field>
+        </record>
+        <!--Action Part-->
+		<record model="ir.actions.act_window" id="action_part">
+			<field name="name">Part</field>
+			<field name="res_model">autorepair.part</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{'search_default_price': 0}</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Creating a catalog of parts for repairs</p>
+           	</field>
+        </record>
+        
+        <!--Action Partner-->
+        <record  model="ir.actions.act_window" id="action_partner">
+            <field name="name">Client</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{"search_default_customer": 1}</field>
+        </record>
+        
+       <!--Action Vehicle-->
+        <record  model="ir.actions.act_window" id="action_vehicle">
+            <field name="name">Vehicle</field>
+            <field name="res_model">autorepair.vehicle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_client": 1}</field>
+            <field name="help" type="html">
+				<p class="oe_view_nocontent_create">Creating a catalog of vehicles for repairs</p>
+           	</field>
+        </record>
+                
+	</data>
+
+</openerp>

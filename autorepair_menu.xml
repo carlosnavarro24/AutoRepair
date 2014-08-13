@@ -25,19 +25,23 @@
         <menuitem id="menu_autorepair_repairs_item"
             name="Repairs"
             sequence="10"
+            action="action_repair"
             parent="menu_autorepair_repairs"/>
          <!--Submenu Items Configuration-->  
         <menuitem id="menu_autorepair_parts"
             name="Parts"
             sequence="10"
+            action="action_part"
             parent="menu_autorepair_configuration"/>
         <menuitem id="menu_autorepair_clients"
             name="Clients"
+            action="action_partner"
             sequence="10"
             parent="menu_autorepair_configuration"/>
         <menuitem id="menu_autorepair_vehicles"
-            name="vehicles"
+            name="Vehicles"
             sequence="10"
+            action="action_vehicle"
             parent="menu_autorepair_configuration"/>
 
     </data>

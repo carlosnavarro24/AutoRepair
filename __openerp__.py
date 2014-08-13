@@ -19,6 +19,7 @@ Al instalar el módulo se crean los objetos de Cliente,Vehiculo,Reparación y Pi
 """,
     'data': [
              'autorepair_menu.xml',
+             'autorepair_view.xml'
 
              
         #all other data files, except demo data and tests

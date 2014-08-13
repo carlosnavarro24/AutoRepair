@@ -3,11 +3,9 @@ import datetime
 from openerp import tools
 
 class client(osv.Model):
-    _name='res.partner'
     _inherit='res.partner'
     _columns={
               'vehicle_ids':fields.one2many('autorepair.vehicle','client_id',string="Vehicle Owner"),
-              'client':    fields.boolean(string="Is client"),
         }
 
 
@@ -16,39 +14,55 @@ class vehicle(osv.Model):
 
     _columns={
               'register': fields.char(string="Register Number",size=20,required=True),
-              'client_id':fields.many2one('res.partner',required=True,domain="[('client','=',True)]"),
+              'client_id':fields.many2one('res.partner',required=True,domain="[('customer','=',True)]",string="Client"),
               'brand':fields.char(size=40,required=False,string="Brand"),
-              'model':fields.char(size=40,required=False,String="Model"),
-              'color':fields.char(size=10,required=False,String="Color"),
+              'model':fields.char(size=40,required=False,string="Model"),
+              'color':fields.char(size=10,required=False,string="Color"),
               'repair_ids':fields.one2many('autorepair.repair','vehicle_id',string="Repair Realized"),
-      
+
             }
-    
+    _rec_name='register'
     _sql_constraints = [
         ('reference_register_unique',
         'UNIQUE(register)',
         'The register number already exist ')
      ]
-    _order="register,client"
+    _order="register,client_id"
 
 
 class repair(osv.Model):
     _name='autorepair.repair'
+    
+    
+    def create(self, cr, uid, vals, context=None):
+        sequence=self.pool.get('ir.sequence').get(cr, uid, 'autorepair.repair')
+        vals['repair_num']=sequence
+        return super(student, self).create(cr, uid, vals, context=context)
 
     _columns={
-              'repair_num': fields.integer(string="Repair Number",required=True),
+              'repair_num': fields.char(string="Repair Number",required=True,readonly=True),
               'description':fields.text(string="Description",required=True),
-              'vehicle_id':fields.many2one('autorepair.vehicle',required=True),
+              'vehicle_id':fields.many2one('autorepair.vehicle',required=True, string="Vehicle"),
               'in_date':fields.date(string="Check In"),
               'out_date':fields.date(string="Check Out"),
               'hours':fields.float(string="Hours",digits=(6,2)),
-              'client_id':fields.related('vehicle_id','name',readonly=True,type='many2one',relation='res.partner')
+              'client_id':fields.related('vehicle_id','name',readonly=True,type='many2one',relation='res.partner',string="Client"),
+              'detail_repair_ids':fields.one2many('autorepair.detail_repair','repair_id',string="Detail Repair"),
+
               }
     _defaults={
         'hours':1,
         'in_date':fields.date.today,
-        'out_date':fields.date.today
+        'out_date':fields.date.today,
+        'repair_num':lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid,'autorepair.repair'),
+
         }
+    def onchange_get_client(self, cr, uid, ids, vehicle,context={}):
+      for repair in self.browse(cr, uid, ids, context=context):
+          print repair.vehicle_id.client_id.id
+          return repair.vehicle_id.client_id.id
+                
+
 
     def _check_hours_no_negative(self, cr, uid, ids, context={}):
         for repair in self.browse(cr, uid, ids, context=context):
@@ -114,7 +128,7 @@ class part(osv.Model):
     _columns={
               'reference': fields.char(string="Part Number",size=20,required=True),
               'description':fields.text(string="Description",required=True),
-              'price':fields.float(string="Price Unit",required=True,digits=(10,2)),
+              'price':fields.float(string="Actual Price",required=True,digits=(10,2)),
               'stock':fields.integer(string="Stock Level",required=True)
                         }
     _defaults={
@@ -129,7 +143,7 @@ class part(osv.Model):
         return True
     def _check_stock_no_negative(self, cr, uid, ids, context={}):
         for part in self.browse(cr, uid, ids, context=context):
-            if part.qualify<0:
+            if part.stock<0:
                 return False
         return True
 
