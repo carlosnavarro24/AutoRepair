@@ -184,20 +184,23 @@
                       		</div>
                         	<separator></separator>
                       		<group col="4">
-                       				<field name="vehicle_id" on_change="onchange_get_client(vehicle_id)"/>
+                       				<field name="vehicle_id" on_change="onchange_vehicle_id(vehicle_id)"/>
                						<field name="client_id"/>
-               				</group>
-               				<group col="4">
                        				<field name="in_date"/>
                						<field name="out_date"/>
                						<field name="hours"/>
                				</group>
-
-                   			<notebook colspan="4">
+                   			<notebook>
                    				<page string="Detail Repairs">
-                   					<field name="detail_repair_ids"/>
-                   				</page>
-                   			</notebook>
+									<field name="detail_repair_ids">
+                   						<tree string="Detail Repair" editable="top">
+                                    		<field name="part_id" on_change="onchange_part_id(part_id,context)"/>
+                                    		<field name="units"/>
+                                    		<field name="price"/>
+                                    	</tree>
+                            		</field>
+                       			</page>
+                        	</notebook>
 					</sheet>
                 </form>
             </field>
@@ -218,12 +221,44 @@
 				</search>
             </field>
         </record>
+        
+        <!--Form View detail Repair-->
+        <record model="ir.ui.view" id="view_autorepair_detail_repair_form">
+            <field name="name">view.autorepair.detail.repair.form</field>
+            <field name="model">autorepair.detail_repair</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Detail Repair" version="7.0">
+                	<sheet>
+                  		<group col="4">
+                       		<field name="part_id" />
+               				<field name="units"/>
+               				<field name="price"/>
+               			</group>
+					</sheet>
+                </form>
+            </field>
+        </record>
+        
+                <!--Tree View detail repair-->
+		<record model="ir.ui.view" id="view_autorepair_detail_repair_tree">
+            <field name="name">view.autorepair.detail.repair.tree</field>
+            <field name="model">autorepair.detail_repair</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <tree editable="top" string="Detail Repair">
+                	<field name="part_id"/>
+               		<field name="units"/>
+               		<field name="price"/>
+                </tree>    
+            </field>
+        </record>
                 <!--Action Repair-->
 		<record model="ir.actions.act_window" id="action_repair">
 			<field name="name">Repair</field>
 			<field name="res_model">autorepair.repair</field>
 			<field name="view_mode">tree,form</field>
-			<field name="context">{'search_default_client': 1,'search_default_vehicle': 1}</field>
+			<field name="context">{'search_default_client': 1}</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">Creating repairs of vehicles</p>
            	</field>
