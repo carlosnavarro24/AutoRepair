@@ -162,7 +162,81 @@
         	<field name="next_number">1</field>
         <!-- in case you need to attach it to a specific company <field name="company_id" ref="xx"/> -->
 		</record>
-        
+		
+		 <!--Gantt View Repair-->
+        <record model="ir.ui.view" id="view_autorepair_repair_gantt">
+            <field name="name">view.autorepair.repair.gantt</field>
+            <field name="model">autorepair.repair</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <gantt string="Repairs" mode="week" color="repair_num" date_start="in_date" date_stop="out_date" >
+                    <level object="autorepair.repair" link="repair_id">
+                    	<field name="description"/>
+                    </level>
+                </gantt>
+            </field>
+        </record>  
+        <!--Calendar View Repair-->
+        <record model="ir.ui.view" id="view_autorepair_repair_calendar">
+        	<field name="name">view.autorepair.repair.calendar</field>
+        	<field name="model">autorepair.repair</field>
+        	<field name="priority" eval="16"/>
+        	<field name="arch" type="xml">
+        		<calendar string="Repairs" color="repair_num" date_start="in_date" date_stop="out_date">
+        			<field name="repair_num"/>
+        			<field name="description"/>
+        			<field name="state"/>
+        		</calendar>
+        	</field>
+        </record>
+       <!--Kanban Repair-->
+		<record model="ir.ui.view" id="view_autorepair_repair_kanban">
+            <field name="name">view.autorepair.repair.kanban</field>
+            <field name="model">autorepair.repair</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" >
+                    <field name="color" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)}
+                                oe_kanban_global_click_edit oe_semantic_html_override
+                                oe_kanban_card #{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}">
+                                <div class="oe_dropdown_kanban">
+                                    <div class="oe_dropdown_toggle">
+                                        <span class="oe_e">í</span>
+                                        <ul class="oe_dropdown_menu">
+                                            <li><a type="delete">Delete</a></li>
+                                            <li><ul class="oe_kanban_colorpicker" /></li>
+                                        </ul>
+                                    </div>
+                                    <div class="oe_clear"></div>
+                                </div>
+                                <div t-attf-class="oe_kanban_content">
+                                    Vehicle: <field name="vehicle_id"></field><br />
+                                    Description: <field name="description"></field><br />
+                                    Check In: <field name="in_date"></field><br />
+                                    Total: <field name="total"></field>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+		</record> 
+        <!--View Graph Repair-->i
+        <record model="ir.ui.view" id="view_autorepair_repair_graph">
+            <field name="name">view.autorepair.repair.graph</field>
+            <field name="model">autorepair.repair</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <graph string="Cost by Repair" type="bar" >
+                    <field name="repair_num" />
+                    <field name="total" operator="+" />
+                </graph>
+            </field>
+        </record>
+       
         		<!--Form View repair-->
         <record model="ir.ui.view" id="view_autorepair_repair_form">
             <field name="name">view.autorepair.repair.form</field>
@@ -170,6 +244,13 @@
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <form string="Repair" version="7.0">
+                        <header>
+                    		<button name="signal_checkin" type="workflow" string="Check In" states="checkup" />
+                    		<button name="signal_checkup" type="workflow" string="Check Up" states="checkin,repair" class="oe_highlight" />
+                    		<button name="signal_repair" type="workflow" string="Repair" states="checkup,checkout" class="oe_highlight" />
+                    		<button name="signal_checkout" type="workflow" string="Check Out" states="repair" class="oe_highlight" />
+                    		<field name="state" widget="statusbar" />
+                    	</header>
                         <sheet>
                         	 <div class="oe_title">
                             	<label for="repair_num" class="oe_edit_only"/>
@@ -183,22 +264,27 @@
                       			<field name="description"/>
                       		</div>
                         	<separator></separator>
-                      		<group col="4">
+                      		<group col="4"  >
                        				<field name="vehicle_id" on_change="onchange_vehicle_id(vehicle_id)"/>
                						<field name="client_id"/>
                        				<field name="in_date"/>
                						<field name="out_date"/>
-               						<field name="hours"/>
                				</group>
                    			<notebook>
-                   				<page string="Detail Repairs">
-									<field name="detail_repair_ids">
-                   						<tree string="Detail Repair" editable="top">
-                                    		<field name="part_id" on_change="onchange_part_id(part_id,context)"/>
+                   				<page string="Detail Repairs"  >
+									<field name="detail_repair_ids" attrs="{'readonly':[('state','in',['checkin','checkout'])]}">
+                   						<tree string="Detail Repair" editable="top" >
+                                    		<field name="part_id"  on_change="onchange_part_id(part_id,context)" />
                                     		<field name="units"/>
                                     		<field name="price"/>
+                                    		<field name="total_line" sum="Total"/>
                                     	</tree>
                             		</field>
+                        			<group>
+		                                <group class="oe_subtotal_footer oe_right">
+                                   		 	<field name="total" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
+                                		</group>
+                           			 </group>
                        			</page>
                         	</notebook>
 					</sheet>
@@ -211,6 +297,7 @@
             <field name="model">autorepair.repair</field>
             <field name="arch" type="xml">
             	<search string="Repair Search">	
+            		<filter icon="terp-camera_test" name="nocheckout" domain="[('state','!=','checkout')]" string="No CheckOut" help="No Check Out"/>
 					<group expand="0" string="Group By...">
 	   					<filter string="Vehicle" name="vehicle" icon="terp-project" domain="[]" context="{'group_by':'vehicle_id'}"/>
 	   					<filter string="Client" name="client" icon="terp-project" domain="[]" context="{'group_by':'client_id'}"/>
@@ -229,6 +316,7 @@
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <form string="Detail Repair" version="7.0">
+                	
                 	<sheet>
                   		<group col="4">
                        		<field name="part_id" />
@@ -257,8 +345,8 @@
 		<record model="ir.actions.act_window" id="action_repair">
 			<field name="name">Repair</field>
 			<field name="res_model">autorepair.repair</field>
-			<field name="view_mode">tree,form</field>
-			<field name="context">{'search_default_client': 1}</field>
+			<field name="view_mode">tree,form,gantt,calendar,graph,kanban</field>
+			<field name="context">{'search_default_nocheckout': 1}</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">Creating repairs of vehicles</p>
            	</field>

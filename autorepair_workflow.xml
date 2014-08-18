@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data>
+        <record model="workflow" id="autorepair_repair_wkf">
+            <field name="name">autorepair_repair_workflow</field>
+            <field name="osv">autorepair.repair</field>
+            <field name="on_create" eval="True" />
+        </record>
+        
+      	<record model="workflow.activity" id="autorepair_repair_wkf_checkin">
+            <field name="name">checkin</field>
+            <field name="wkf_id" ref="autorepair_repair_wkf" />
+            <field name="kind">function</field>
+            <field name="flow_start" eval="True" />
+            <field name="action">action_checkin()</field>
+        </record>
+		<record model="workflow.activity" id="autorepair_repair_wkf_checkup">
+            <field name="name">checkup</field>
+            <field name="wkf_id" ref="autorepair_repair_wkf" />
+            <field name="kind">function</field>
+            <field name="action">action_checkup()</field>
+        </record>  
+        <record model="workflow.activity" id="autorepair_repair_wkf_repair">
+            <field name="name">repair</field>
+            <field name="wkf_id" ref="autorepair_repair_wkf" />
+            <field name="kind">function</field>
+            <field name="action">action_repair()</field>
+        </record>        
+        <record model="workflow.activity" id="autorepair_repair_wkf_checkout">
+            <field name="name">checkout</field>
+            <field name="wkf_id" ref="autorepair_repair_wkf" />
+            <field name="kind">function</field>
+            <field name="action">action_checkout()</field>
+        </record> 
+
+        
+        <record model="workflow.transition" id="autorepair_repair_wkf_checkin2checkup">
+            <field name="act_from" ref="autorepair_repair_wkf_checkin" />
+            <field name="act_to" ref="autorepair_repair_wkf_checkup" />
+            <field name="signal">signal_checkup</field>
+            <field name="condition">True</field>
+        </record>
+        
+        <record model="workflow.transition" id="autorepair_repair_wkf_checkup2repair">
+            <field name="act_from" ref="autorepair_repair_wkf_checkup" />
+            <field name="act_to" ref="autorepair_repair_wkf_repair" />
+            <field name="signal">signal_repair</field>
+            <field name="condition">True</field>
+        </record>
+        
+       	<record model="workflow.transition" id="autorepair_repair_wkf_repair2checkout">
+            <field name="act_from" ref="autorepair_repair_wkf_repair" />
+            <field name="act_to" ref="autorepair_repair_wkf_checkout" />
+            <field name="signal">signal_checkout</field>
+            <field name="condition">True</field>
+       </record>
+        
+       <record model="workflow.transition" id="autorepair_repair_wkf_checkout2repair">
+            <field name="act_from" ref="autorepair_repair_wkf_checkout" />
+            <field name="act_to" ref="autorepair_repair_wkf_repair" />
+            <field name="signal">signal_repair</field>
+            <field name="condition">True</field>
+       </record>
+       
+      <record model="workflow.transition" id="autorepair_repair_wkf_repair2checkup">
+            <field name="act_from" ref="autorepair_repair_wkf_repair" />
+            <field name="act_to" ref="autorepair_repair_wkf_checkup" />
+            <field name="signal">signal_checkup</field>
+            <field name="condition">True</field>
+       </record>
+       
+      <record model="workflow.transition" id="autorepair_repair_wkf_checkup2checkin">
+            <field name="act_from" ref="autorepair_repair_wkf_checkup" />
+            <field name="act_to" ref="autorepair_repair_wkf_checkin" />
+            <field name="signal">signal_checkin</field>
+            <field name="condition">True</field>
+       </record>
+        
+
+    </data>
+</openerp>
