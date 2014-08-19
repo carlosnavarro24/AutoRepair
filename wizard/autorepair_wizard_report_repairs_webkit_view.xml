@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+	<data>
+		<!--Wizard Report-->
+		<record model="ir.ui.view" id="view_autorepair_report_wizard_webkit_form">
+            <field name="name">view.autorepair.report.wizard.webkit.form</field>
+            <field name="model">autorepair.wizard_report_repairs_webkit</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Repairs Report" version="7.0">
+                 	<group cols="4">
+                 		<field name="date_from"/>
+                 		<field name="date_to"/>
+                 	</group>
+                 	<group>
+                 		<field name="client_ids"/>
+                 	</group>
+                    <footer>
+                        <button type="object" name="action_go_report" string="Go Report" icon="gtk-ok" class="oe_highlight" />
+                            or
+                        <button type="special" special="cancel" string="Cancel" class="oe_link" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+		<act_window id="action_autorepair_report_wizard_webkit"
+            name="Repairs Report"
+            res_model="autorepair.wizard_report_repairs_webkit"
+            view_mode="form"
+            target="new"/>
+        
+	</data>
+</openerp>

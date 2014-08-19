@@ -20,13 +20,27 @@
         <menuitem id="menu_autorepair_configuration"
             name="Configuration"
             sequence="100"
-            parent="menu_autorepair_items" />    
+            parent="menu_autorepair_items" />   
         <!--Submenu Items Repairs-->   
         <menuitem id="menu_autorepair_repairs_item"
             name="Repairs"
             sequence="10"
             action="action_repair"
             parent="menu_autorepair_repairs"/>
+		<menuitem id="menu_autorepair_repairs_reports"
+            name="Reports"
+            sequence="10"
+            parent="menu_autorepair_repairs"/>
+        <menuitem id="menu_autorepair_repairs_report1"
+            name="Repairs Report Aeroo"
+            sequence="10"
+            action="action_autorepair_report_wizard_aeroo"
+            parent="menu_autorepair_repairs_reports"/>
+        <menuitem id="menu_autorepair_repairs_report2"
+            name="Repairs Report Webkit"
+            sequence="11"
+            action="action_autorepair_report_wizard_webkit"
+            parent="menu_autorepair_repairs_reports"/> 
          <!--Submenu Items Configuration-->  
         <menuitem id="menu_autorepair_parts"
             name="Parts"

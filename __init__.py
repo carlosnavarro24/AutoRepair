@@ -1,2 +1,2 @@
 import autorepair
-
+import wizard

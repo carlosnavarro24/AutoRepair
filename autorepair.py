@@ -101,8 +101,8 @@ class repair(osv.Model):
     ]
     
     _sql_constraints = [
-        ('repair_id_unique',
-        'UNIQUE(repair_id)',
+        ('repair_num_unique',
+        'UNIQUE(repair_num)',
         'The repair number already exist ')
      ]
     _order="in_date"
@@ -125,16 +125,15 @@ class detail_repair(osv.Model):
         
         upd_detail= super(detail_repair, self).write(cr, uid,ids,vals, context=context)
         part_obj=self.pool.get('autorepair.part')
-        print vals
         
-        detail=self.search(cr,uid,[('id','=',ids)])
-        for details in  self.browse(cr,uid,detail):
-            part=part_obj.search(cr, uid,[('id','=',details.part_id)])
-            for part  in part_obj.browse(cr,uid,part):
-                upd_part=part_obj.write(cr,uid,vals['part_id'],{
-                         'stock': part.stock-vals['units']
+        for details in  self.browse(cr,uid,ids,context=context):
+            part=part_obj.search(cr, uid,[('id','=',details.part_id.id)])
+            for parts  in part_obj.browse(cr,uid,part):
+                upd_part=part_obj.write(cr,uid,parts.id,{
+                         'stock': parts.stock-vals['units']
             },context=context)
-        return upd_detail        
+        return upd_detail
+       
     
     def _total(self, cr, uid, ids, field_name, arg, context=None):
         if not ids:
