@@ -22,7 +22,8 @@ Al instalar el módulo se crean los objetos de Cliente,Vehiculo,Reparación y Pi
              'autorepair_view.xml',
              'autorepair_workflow.xml',
              'wizard/autorepair_wizard_report_repairs_aeroo_view.xml',
-             'wizard/autorepair_wizard_report_repairs_webkit_view.xml'
+             'wizard/autorepair_wizard_report_repairs_webkit_view.xml',
+             'report/autorepair_repairs_report_aeroo.xml'
 
              
         #all other data files, except demo data and tests

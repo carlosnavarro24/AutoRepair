@@ -15,7 +15,7 @@
                  		<field name="out_format"/>
                  	</group>
                  	<group>
-                 		<field name="client_ids"/>
+                 		<field name="partner_ids"/>
                  	</group>
                     <footer>
                         <button type="object" name="check_report" string="Go Report" icon="gtk-ok" class="oe_highlight" />
@@ -25,11 +25,14 @@
                 </form>
             </field>
         </record>
-		<act_window id="action_autorepair_report_wizard_aeroo"
-            name="Repairs Report"
-            res_model="autorepair.wizard_report_repairs_aeroo"
-            view_mode="form"
-            target="new"/>
+        <record id="action_autorepair_report_wizard_aeroo" model="ir.actions.act_window">
+            <field name="name">Repairs Report</field>
+            <field name="res_model">autorepair.wizard_report_repairs_aeroo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_autorepair_report_wizard_aeroo_form"/>
+            <field name="target">new</field>
+        </record>
         
 	</data>
 </openerp>
