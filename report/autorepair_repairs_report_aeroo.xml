@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+         
+         <record id="Repairs_odt" model="ir.actions.report.xml">
+            <field name="name">Repairs</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="model">autorepair.repair</field>
+            <field name="report_name">repairs_odt</field>
+            <field name="report_type">aeroo</field>
+            <field name="in_format">oo-odt</field>
+            <field name="out_format">1</field>
+            <field name="parser_loc">autorepair/report/autorepair_repairs_report_aeroo.py</field>
+            <field name="report_rml">autorepair/report/repairs.odt</field>
+            <field name="parser_state">loc</field>
+            <field name="tml_source">file</field>
+         </record>
+         <record id="Courses_Student_Report_ods" model="ir.actions.report.xml">
+            <field name="name">Repairs</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="model">autorepair.repair</field>
+            <field name="report_name">repairs_ods</field>
+            <field name="report_type">aeroo</field>
+            <field name="in_format">oo-ods</field>
+            <field name="out_format">2</field>
+            <field name="parser_loc">autorepair/report/autorepair_repairs_report_aeroo.py</field>
+            <field name="report_rml">autorepair/report/repairs.ods</field>
+            <field name="parser_state">loc</field>
+            <field name="tml_source">file</field>
+         </record>
+    </data>
+</openerp>
